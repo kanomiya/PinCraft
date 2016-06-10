@@ -1,0 +1,11 @@
+[
+{
+  "modid": "com.kanomiya.mcmod.pincraft",
+  "name": "Pin Craft",
+  "description": "Craft pins, Put pins, and Pick pins",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "authorList": ["Kanomiya"]
+}
+]

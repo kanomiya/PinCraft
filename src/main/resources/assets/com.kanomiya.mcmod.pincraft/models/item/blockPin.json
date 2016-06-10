@@ -1,0 +1,7 @@
+{
+    "parent": "com.kanomiya.mcmod.pincraft:block/blockPin",
+
+    "textures": {
+        "texture": "blocks/iron_block"
+    }
+}
