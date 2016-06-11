@@ -6,8 +6,10 @@ import java.util.function.Consumer;
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
 import com.kanomiya.mcmod.pincraft.block.BlockPin;
 import com.kanomiya.mcmod.pincraft.client.render.RenderThreadKnot;
+import com.kanomiya.mcmod.pincraft.client.render.TESRPin;
 import com.kanomiya.mcmod.pincraft.entity.EntityThreadKnot;
 import com.kanomiya.mcmod.pincraft.item.ItemThread;
+import com.kanomiya.mcmod.pincraft.tile.TileEntityPin;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -43,7 +46,9 @@ public class PinCraft
 	{
 		GameRegistry.register(PinCraft.Blocks.PIN);
 		GameRegistry.register(new ItemBlock(PinCraft.Blocks.PIN).setRegistryName(PinCraft.Blocks.PIN.getRegistryName()));
-		GameRegistry.register(PinCraft.Items.THREAD);
+        GameRegistry.register(PinCraft.Items.THREAD);
+
+        GameRegistry.registerTileEntity(TileEntityPin.class, new ResourceLocation(PinCraftAPI.MODID, "tileEntityPin").toString());
 
 		EntityRegistry.registerModEntity(EntityThreadKnot.class, "entityThreadKnot", 0, instance, 64, 1, false);
 
@@ -89,6 +94,8 @@ public class PinCraft
 
 
 			RenderingRegistry.registerEntityRenderingHandler(EntityThreadKnot.class, RenderThreadKnot::new);
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPin.class, new TESRPin());
+
 		}
 
 	}

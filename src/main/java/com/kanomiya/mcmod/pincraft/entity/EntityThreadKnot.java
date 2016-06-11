@@ -2,8 +2,10 @@ package com.kanomiya.mcmod.pincraft.entity;
 
 import javax.annotation.Nullable;
 
+import com.kanomiya.mcmod.pincraft.PinCraft;
 import com.kanomiya.mcmod.pincraft.block.BlockPin;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLeashKnot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,9 +15,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@Deprecated
 public class EntityThreadKnot extends EntityLeashKnot
 {
-
 	public EntityThreadKnot(World worldIn)
 	{
 		super(worldIn);
@@ -33,6 +35,14 @@ public class EntityThreadKnot extends EntityLeashKnot
 	public boolean processInitialInteract(EntityPlayer player, @Nullable ItemStack stack, EnumHand hand)
     {
         return true;
+    }
+
+    @Override
+    public void onBroken(@Nullable Entity brokenEntity)
+    {
+        super.onBroken(brokenEntity);
+
+        entityDropItem(new ItemStack(PinCraft.Items.THREAD), 0.1f);
     }
 
     @Override

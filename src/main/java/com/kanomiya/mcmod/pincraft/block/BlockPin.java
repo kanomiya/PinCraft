@@ -4,15 +4,18 @@ import javax.annotation.Nullable;
 
 import com.kanomiya.mcmod.pincraft.PinCraft;
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
+import com.kanomiya.mcmod.pincraft.tile.TileEntityPin;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockPin extends Block
+public class BlockPin extends BlockContainer
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
@@ -64,7 +67,7 @@ public class BlockPin extends Block
         return true;
     }
 
-    protected static AxisAlignedBB[] aabb = new AxisAlignedBB[]
+    public static AxisAlignedBB[] PIN_AABB = new AxisAlignedBB[]
             {
                     new AxisAlignedBB(0.43d, 0.1d, 0.43d, 0.57d, 1d, 0.57d), // DOWN
                     new AxisAlignedBB(0.43d, 0d, 0.43d, 0.57d, 0.9d, 0.57d), // UP
@@ -80,12 +83,12 @@ public class BlockPin extends Block
     {
         EnumFacing facing = state.getValue(FACING);
 
-        if (facing.getIndex() < aabb.length)
+        if (facing.getIndex() < PIN_AABB.length)
         {
-            return aabb[facing.getIndex()];
+            return PIN_AABB[facing.getIndex()];
         }
 
-        return aabb[0];
+        return PIN_AABB[0];
     }
 
     @Nullable
@@ -147,6 +150,18 @@ public class BlockPin extends Block
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, new IProperty[] { FACING });
+    }
+
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return EnumBlockRenderType.MODEL;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
+        return new TileEntityPin(meta);
     }
 
 

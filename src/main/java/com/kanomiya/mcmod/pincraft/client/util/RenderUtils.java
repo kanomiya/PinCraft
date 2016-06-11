@@ -1,4 +1,4 @@
-package com.kanomiya.mcmod.pincraft.util.render;
+package com.kanomiya.mcmod.pincraft.client.util;
 
 import org.lwjgl.opengl.GL11;
 
@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
 
 public class RenderUtils
 {
@@ -20,10 +21,75 @@ public class RenderUtils
         return tesselator().getBuffer();
     }
 
+
+
+    public static float getYaw(EnumFacing facing)
+    {
+        switch (facing)
+        {
+        case UP:
+            break;
+        case DOWN:
+            return 180f;
+        case NORTH:
+            return 270f;
+        case SOUTH:
+            return 90f;
+        case EAST:
+            break;
+        case WEST:
+            return 270f;
+        }
+
+        return 0f;
+    }
+
+    public static float getPitch(EnumFacing facing)
+    {
+        switch (facing)
+        {
+        case UP:
+            break;
+        case DOWN:
+            break;
+        case NORTH:
+            break;
+        case SOUTH:
+            break;
+        case EAST:
+            return -90f;
+        case WEST:
+            return 90f;
+        }
+
+        return 0f;
+    }
+
+
+
     public static double uvSize(int tileSize, int textureSize)
     {
         return (double) tileSize /textureSize;
     }
+
+
+
+    public static void drawLine(Vec3d from, Vec3d to, int rgba)
+    {
+        drawLine(from, to, ((rgba >> (16*3)) & 0xff) /0xff, ((rgba >> (16*2)) & 0xff) /0xff, ((rgba >> 16) & 0xff) /0xff, (rgba & 0xff) /0xff);
+    }
+
+    public static void drawLine(Vec3d from, Vec3d to, float red, float green, float blue, float alpha)
+    {
+        VertexBuffer vertexBuffer = vertexBuffer();
+
+        vertexBuffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        vertexBuffer.pos(from.xCoord, from.yCoord, from.zCoord).color(red, green, blue, alpha).endVertex();
+        vertexBuffer.pos(to.xCoord, to.yCoord, to.zCoord).color(red, green, blue, alpha).endVertex();
+
+        tesselator().draw();
+    }
+
 
     public static class Box
     {

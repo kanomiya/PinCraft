@@ -3,8 +3,8 @@ package com.kanomiya.mcmod.pincraft.client.render;
 import org.lwjgl.opengl.GL11;
 
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
+import com.kanomiya.mcmod.pincraft.client.util.RenderUtils;
 import com.kanomiya.mcmod.pincraft.entity.EntityThreadKnot;
-import com.kanomiya.mcmod.pincraft.util.render.RenderUtils;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
+@Deprecated
 public class RenderThreadKnot extends Render<EntityThreadKnot>
 {
     private static final ResourceLocation THREAD_KNOT_TEXTURES = new ResourceLocation(PinCraftAPI.MODID, "textures/entity/entityThreadKnot.png");
