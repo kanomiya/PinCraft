@@ -1,44 +1,34 @@
 package com.kanomiya.mcmod.pincraft.pin;
 
+import java.util.Objects;
+import java.util.UUID;
+
 import com.google.common.base.Optional;
 import com.kanomiya.mcmod.pincraft.api.pin.IPin;
-import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
 import com.kanomiya.mcmod.pincraft.api.pin.ISignal;
 import com.kanomiya.mcmod.pincraft.api.pin.IThreadLine;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
 public class Pin implements IPin
 {
-    IPinHolder holder;
-    int port;
-
     IThreadLine thread;
     ISignal signal;
 
-    AxisAlignedBB boundingBox;
+    Vec3d offset;
+    Vec3d size;
     Vec3d knotOffset;
 
-    public Pin(IPinHolder holder, int port, AxisAlignedBB boundingBox, Vec3d knotOffset)
+    UUID uuid;
+
+    public Pin(Vec3d offset, Vec3d size, Vec3d knotOffset)
     {
-        this.holder = holder;
-        this.port = port;
-        this.boundingBox = boundingBox;
+        this.offset = offset;
+        this.size = size;
         this.knotOffset = knotOffset;
-    }
 
-    @Override
-    public IPinHolder getHolder()
-    {
-        return holder;
-    }
-
-    @Override
-    public int getHolderPort()
-    {
-        return port;
+        uuid = UUID.randomUUID();
     }
 
     @Override
@@ -48,7 +38,7 @@ public class Pin implements IPin
     }
 
     @Override
-    public void attachThread(IThreadLine thread)
+    public void setThread(IThreadLine thread)
     {
         this.thread = thread;
     }
@@ -65,8 +55,22 @@ public class Pin implements IPin
     {
         if (thread == null) return;
 
-        if (thread.getSource() == this) thread.setSource(null);
-        if (thread.getDestination() == this) thread.setDestination(null);
+        if (Objects.equals(thread.getSourceUUID(), getUUID())) thread.stripSource();
+        if (Objects.equals(thread.getDestinationUUID(), getUUID())) thread.stripDestination();
+
+        thread = null;
+    }
+
+    @Override
+    public Vec3d getOffsetVec()
+    {
+        return offset;
+    }
+
+    @Override
+    public Vec3d getSizeVec()
+    {
+        return size;
     }
 
     @Override
@@ -76,15 +80,16 @@ public class Pin implements IPin
     }
 
     @Override
-    public AxisAlignedBB getRelativeBox()
+    public void setUUID(UUID uuid)
     {
-        return boundingBox;
+        this.uuid = uuid;
     }
 
-
-
-
-
+    @Override
+    public UUID getUUID()
+    {
+        return uuid;
+    }
 
 
 }

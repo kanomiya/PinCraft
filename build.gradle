@@ -22,7 +22,7 @@ plugins {
 }
 */
 version = "0.1.0-alpha.pre"
-apiVersion = "0.1.0-alpha.pre"
+def apiVersion = "0.1.0-alpha.pre"
 group= "com.kanomiya.mcmod.pincraft" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "pincraft"
 sourceCompatibility = 1.8
@@ -42,7 +42,7 @@ minecraft {
 	replaceIn 'PinCraft.java'
 	replaceIn 'package-info.java'
 	replace "@VERSION@", project.version
-	replace "@API_VERSION@", project.apiVersion
+	replace "@API_VERSION@", apiVersion
 }
 
 dependencies {

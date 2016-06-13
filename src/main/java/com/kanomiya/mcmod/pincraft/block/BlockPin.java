@@ -6,7 +6,7 @@ import com.kanomiya.mcmod.pincraft.PinCraft;
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
 import com.kanomiya.mcmod.pincraft.tile.TileEntityPin;
 
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -15,7 +15,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockPin extends BlockContainer
+public class BlockPin extends Block
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
@@ -153,16 +152,23 @@ public class BlockPin extends BlockContainer
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public boolean hasTileEntity(IBlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return true;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
+    public TileEntity createTileEntity(World world, IBlockState state)
     {
-        return new TileEntityPin(meta);
+        return new TileEntityPin();
     }
 
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        TileEntityPin tile;
+
+        super.breakBlock(worldIn, pos, state);
+    }
 
 }

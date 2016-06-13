@@ -4,25 +4,35 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
+import com.kanomiya.mcmod.pincraft.api.PinCraftAPI.PinCraftAPIEventHandler;
+import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
+import com.kanomiya.mcmod.pincraft.api.pin.IPinHolderProvider;
 import com.kanomiya.mcmod.pincraft.block.BlockPin;
-import com.kanomiya.mcmod.pincraft.client.render.RenderThreadKnot;
 import com.kanomiya.mcmod.pincraft.client.render.TESRPin;
-import com.kanomiya.mcmod.pincraft.entity.EntityThreadKnot;
 import com.kanomiya.mcmod.pincraft.item.ItemThread;
+import com.kanomiya.mcmod.pincraft.pin.Pin;
+import com.kanomiya.mcmod.pincraft.pin.PinCapabilityProvider;
+import com.kanomiya.mcmod.pincraft.pin.PinHolder;
 import com.kanomiya.mcmod.pincraft.tile.TileEntityPin;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,7 +60,6 @@ public class PinCraft
 
         GameRegistry.registerTileEntity(TileEntityPin.class, new ResourceLocation(PinCraftAPI.MODID, "tileEntityPin").toString());
 
-		EntityRegistry.registerModEntity(EntityThreadKnot.class, "entityThreadKnot", 0, instance, 64, 1, false);
 
 		if (event.getSide().isClient())
 		{
@@ -93,11 +102,14 @@ public class PinCraft
 			simpleRegister.accept(PinCraft.Items.THREAD);
 
 
-			RenderingRegistry.registerEntityRenderingHandler(EntityThreadKnot.class, RenderThreadKnot::new);
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPin.class, new TESRPin());
 
 		}
 
+		CapabilityManager.INSTANCE.register(IPinHolder.class, new IPinHolder.CapStorage(), PinHolder::new);
+
+        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(PinCraftAPIEventHandler.INSTANCE);
 	}
 
 	@Mod.EventHandler
@@ -105,6 +117,39 @@ public class PinCraft
 	{
 
 	}
+
+
+
+    @SubscribeEvent
+    public void onAttachCapEntity(AttachCapabilitiesEvent.Entity event)
+    {
+        Entity entity = event.getEntity();
+
+        if (entity instanceof EntityPlayer)
+        {
+            IPinHolder holder = new PinHolder<Entity>(entity, new Pin(Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO));
+
+            event.addCapability(PinCraftAPI.RL_CAP_PINHOLDER, new PinCapabilityProvider(holder));
+        }
+
+    }
+
+    @SubscribeEvent
+    public void onAttachCapTileEntity(AttachCapabilitiesEvent.TileEntity event)
+    {
+        TileEntity tile = event.getTileEntity();
+
+
+        if (tile instanceof IPinHolderProvider)
+        {
+            IPinHolderProvider provider = (IPinHolderProvider) tile;
+
+            IPinHolder holder = new PinHolder<TileEntity>(tile, provider.createPins());
+
+            event.addCapability(PinCraftAPI.RL_CAP_PINHOLDER, new PinCapabilityProvider(holder));
+        }
+
+    }
 
 
 	public static class Blocks
