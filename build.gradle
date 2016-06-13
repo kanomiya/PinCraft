@@ -21,8 +21,8 @@ plugins {
 	id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "0.1.0-alpha.pre"
-def apiVersion = "0.1.0-alpha.pre"
+version = "0.1.0-alpha+1"
+def apiVersion = "0.1.0-alpha+1"
 group= "com.kanomiya.mcmod.pincraft" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "pincraft"
 sourceCompatibility = 1.8

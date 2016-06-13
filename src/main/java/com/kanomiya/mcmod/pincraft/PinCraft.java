@@ -30,7 +30,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -112,11 +111,20 @@ public class PinCraft
         MinecraftForge.EVENT_BUS.register(PinCraftAPIEventHandler.INSTANCE);
 	}
 
+    /*
+
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event)
+	public void postInit(FMLPostInitializationEvent event)
 	{
+        APIの存在判定?
+
+	    if (ModAPIManager.INSTANCE.hasAPI("com.kanomiya.mcmod.pincraft|API"))
+	    {
+            com.kanomiya.mcmod.pincraft.api.PinCraftAPI...
+	    }
 
 	}
+    */
 
 
 
