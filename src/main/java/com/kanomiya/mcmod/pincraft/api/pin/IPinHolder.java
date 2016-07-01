@@ -23,14 +23,24 @@ public interface IPinHolder extends INBTSerializable<NBTTagCompound>
 
     Vec3d getAbsolutePos();
 
-    default Collection<IPinReference> pinSet()
+    default void onPinUpdate(IPin pin, boolean isOn)
+    {
+        Object owner = getOwner();
+        if (owner instanceof IPinHolderProvider)
+        {
+            ((IPinHolderProvider) owner).onPinUpdate(pin, isOn);
+        }
+
+    }
+
+    default Collection<IPin> pinSet()
     {
         int len = getPinCount();
-        IPinReference[] array = new IPinReference[len];
+        IPin[] array = new IPin[len];
 
         for (int i=0; i<len; i++)
         {
-            array[i] = new PinReference(this, i);
+            array[i] = getPinAt(i);
         }
 
         return Sets.newHashSet(array);

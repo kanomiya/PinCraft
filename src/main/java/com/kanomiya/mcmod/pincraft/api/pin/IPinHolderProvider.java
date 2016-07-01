@@ -1,9 +1,15 @@
 package com.kanomiya.mcmod.pincraft.api.pin;
 
+import javax.annotation.Nonnull;
+
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public interface IPinHolderProvider<THIS> extends ICapabilityProvider
+public interface IPinHolderProvider extends ICapabilityProvider
 {
-    IPin[] createPins();
+
+    void onPinUpdate(IPin pin, boolean isOn);
+
+    @Nonnull
+    IPinModel[] createPinModels();
 
 }

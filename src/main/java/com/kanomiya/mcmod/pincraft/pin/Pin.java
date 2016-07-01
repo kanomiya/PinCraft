@@ -3,30 +3,29 @@ package com.kanomiya.mcmod.pincraft.pin;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.google.common.base.Optional;
 import com.kanomiya.mcmod.pincraft.api.pin.IPin;
-import com.kanomiya.mcmod.pincraft.api.pin.ISignal;
+import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
+import com.kanomiya.mcmod.pincraft.api.pin.IPinModel;
 import com.kanomiya.mcmod.pincraft.api.pin.IThreadLine;
-
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 
 public class Pin implements IPin
 {
-    IThreadLine thread;
-    ISignal signal;
+    IPinHolder holder;
+    int port;
 
-    Vec3d offset;
-    Vec3d size;
-    Vec3d knotOffset;
+    IPinModel model;
+
+    IThreadLine thread;
+    boolean isOn;
 
     UUID uuid;
 
-    public Pin(Vec3d offset, Vec3d size, Vec3d knotOffset)
+    protected Pin(IPinHolder holder, int port, IPinModel model)
     {
-        this.offset = offset;
-        this.size = size;
-        this.knotOffset = knotOffset;
+        this.holder = holder;
+        this.port = port;
+
+        this.model = model;
 
         uuid = UUID.randomUUID();
     }
@@ -44,13 +43,6 @@ public class Pin implements IPin
     }
 
     @Override
-    public Optional<ISignal> getSignal(ResourceLocation type)
-    {
-        if (type == signal.getType()) return Optional.of(signal);
-        return Optional.absent();
-    }
-
-    @Override
     public void stripThread()
     {
         if (thread == null) return;
@@ -62,21 +54,9 @@ public class Pin implements IPin
     }
 
     @Override
-    public Vec3d getOffsetVec()
+    public IPinModel getModel()
     {
-        return offset;
-    }
-
-    @Override
-    public Vec3d getSizeVec()
-    {
-        return size;
-    }
-
-    @Override
-    public Vec3d getKnotOffsetVec()
-    {
-        return knotOffset;
+        return model;
     }
 
     @Override
@@ -90,6 +70,41 @@ public class Pin implements IPin
     {
         return uuid;
     }
+
+    @Override
+    public boolean isOn()
+    {
+        return isOn;
+    }
+
+    @Override
+    public void on()
+    {
+        isOn = true;
+        holder.onPinUpdate(this, isOn);
+    }
+
+    @Override
+    public void off()
+    {
+        isOn = false;
+        holder.onPinUpdate(this, isOn);
+    }
+
+
+    @Override
+    public IPinHolder getPinHolder()
+    {
+        return holder;
+    }
+
+    @Override
+    public int getPort()
+    {
+        return port;
+    }
+
+
 
 
 }

@@ -2,6 +2,7 @@ package com.kanomiya.mcmod.pincraft.pin;
 
 import com.kanomiya.mcmod.pincraft.api.pin.IPin;
 import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
+import com.kanomiya.mcmod.pincraft.api.pin.IPinModel;
 import com.kanomiya.mcmod.pincraft.api.util.IPositionable;
 
 import net.minecraft.entity.Entity;
@@ -22,10 +23,17 @@ public class PinHolder<T> implements IPinHolder
 
     }
 
-    public PinHolder(T owner, IPin... pins)
+    public PinHolder(T owner, IPinModel... pinModels)
     {
         this.owner = owner;
-        this.pins = pins;
+
+        int len = pinModels.length;
+        pins = new IPin[len];
+
+        for (int i=0; i<len; i++)
+        {
+            pins[len] = new Pin(this, i, pinModels[i]);
+        }
     }
 
     @Override
@@ -45,7 +53,7 @@ public class PinHolder<T> implements IPinHolder
     {
         for (int i=0,len=getPinCount(); i<len; i++)
         {
-            AxisAlignedBB box = getPinAt(i).getRelativeBox();
+            AxisAlignedBB box = getPinAt(i).getModel().getRelativeBox();
             // System.out.println(box.isVecInside(pos) + ")) " + box + " => " + pos);
             if (box.isVecInside(pos)) return i;
         }
@@ -64,7 +72,7 @@ public class PinHolder<T> implements IPinHolder
     {
         T owner = getOwner();
 
-        if (owner instanceof TileEntity) return new Vec3d(((TileEntity) owner).getPos());
+        if (owner instanceof TileEntity) return new Vec3d(((TileEntity) owner).getPos()); // TODO: ? IPinHolderProviderに統合?
         if (owner instanceof Entity) return ((Entity) owner).getPositionVector();
         if (owner instanceof IPositionable) return ((IPositionable) owner).getPosition();
 

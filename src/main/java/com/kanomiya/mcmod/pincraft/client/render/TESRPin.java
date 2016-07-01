@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
 import com.kanomiya.mcmod.pincraft.api.pin.IPin;
 import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
+import com.kanomiya.mcmod.pincraft.api.pin.IPinModel;
 import com.kanomiya.mcmod.pincraft.api.pin.IThreadLine;
 import com.kanomiya.mcmod.pincraft.block.BlockPin;
 import com.kanomiya.mcmod.pincraft.client.util.RenderUtils;
@@ -72,6 +73,7 @@ public class TESRPin extends TileEntitySpecialRenderer<TileEntityPin>
         for (int i=0; i<pinHolder.getPinCount(); i++)
         {
             IPin pin = pinHolder.getPinAt(i);
+            IPinModel model = pin.getModel();
             IThreadLine thread = pin.getThread();
 
             GlStateManager.enableTexture2D();
@@ -81,7 +83,7 @@ public class TESRPin extends TileEntitySpecialRenderer<TileEntityPin>
             GL11.glRotated(yaw, 1d, 0d, 0d);
             GL11.glRotated(pitch, 0d, 0d, 1d);
 
-            RenderUtils.translate(pin.getOffsetVec());
+            RenderUtils.translate(model.getOffset());
 
             boolean hasSource = thread != null && thread.getSourceUUID() != null;
             boolean hasDest = thread != null && thread.getDestinationUUID() != null;
@@ -89,7 +91,7 @@ public class TESRPin extends TileEntitySpecialRenderer<TileEntityPin>
             if (thread != null)
             {
                 GL11.glPushMatrix();
-                RenderUtils.translate(pin.getKnotOffsetVec());
+                RenderUtils.translate(model.getKnotOffset());
 
                 double uvSize16 = RenderUtils.uvSize(16, uWidth);
 
@@ -110,7 +112,7 @@ public class TESRPin extends TileEntitySpecialRenderer<TileEntityPin>
 
             if (Minecraft.getMinecraft().thePlayer.isCreative())
             {
-                RenderUtils.drawLineBox(pin.getSizeVec(), 0xff00ffff);
+                RenderUtils.drawLineBox(model.getSize(), 0xff00ffff);
             }
 
             GL11.glPopMatrix();

@@ -26,24 +26,24 @@ public interface IThreadLine extends INBTSerializable<NBTTagCompound>
     void stripSource();
     void stripDestination();
 
-    default IPinReference getSource()
+    default IPin getSource()
     {
-        return PinCraftAPI.toPinReference(getSourceUUID());
+        return PinCraftAPI.toPin(getSourceUUID());
     }
 
-    default void setSource(IPinReference source)
+    default void setSource(IPin source)
     {
-        setSource(source.getPinUUID());
+        setSource(source.getUUID());
     }
 
-    default IPinReference getDestination()
+    default IPin getDestination()
     {
-        return PinCraftAPI.toPinReference(getDestinationUUID());
+        return PinCraftAPI.toPin(getDestinationUUID());
     }
 
-    default void setDestination(IPinReference dest)
+    default void setDestination(IPin dest)
     {
-        setDestination(dest.getPinUUID());
+        setDestination(dest.getUUID());
     }
 
 
@@ -83,14 +83,14 @@ public interface IThreadLine extends INBTSerializable<NBTTagCompound>
 
     default Vec3d getStartPos()
     {
-        IPinReference source = getSource();
-        return source != null ? source.getPin().getKnotOffsetVec() : Vec3d.ZERO;
+        IPin source = getSource();
+        return source != null ? source.getModel().getKnotOffset() : Vec3d.ZERO;
     }
 
     default Vec3d getEndPos()
     {
-        IPinReference source = getSource();
-        IPinReference dest = getDestination();
+        IPin source = getSource();
+        IPin dest = getDestination();
 
         if (source == null || dest == null) return Vec3d.ZERO;
 

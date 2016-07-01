@@ -29,10 +29,10 @@ public class ThreadLine implements IThreadLine
         this.destUUID = destUUID;
     }
 
-    public ThreadLine(IPinReference source, IPinReference dest)
+    public ThreadLine(IPin source, IPin dest)
     {
-        sourceUUID = source.getPinUUID();
-        destUUID = dest.getPinUUID();
+        sourceUUID = source.getUUID();
+        destUUID = dest.getUUID();
     }
 
     @Override
@@ -64,10 +64,10 @@ public class ThreadLine implements IThreadLine
     {
         if (sourceUUID == null) return ;
 
-        IPinReference pinRef = getSource();
-        if (pinRef != null)
+        IPin pin = getSource();
+        if (pin != null)
         {
-            pinRef.getPin().setThread(null);
+            pin.setThread(null);
         }
 
         sourceUUID = null;
@@ -78,10 +78,10 @@ public class ThreadLine implements IThreadLine
     {
         if (destUUID == null) return ;
 
-        IPinReference pinRef = getDestination();
-        if (pinRef != null)
+        IPin pin = getDestination();
+        if (pin != null)
         {
-            pinRef.getPin().setThread(null);
+            pin.setThread(null);
         }
 
         destUUID = null;

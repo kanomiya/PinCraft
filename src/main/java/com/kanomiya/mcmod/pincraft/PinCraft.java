@@ -7,10 +7,10 @@ import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI.PinCraftAPIEventHandler;
 import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
 import com.kanomiya.mcmod.pincraft.api.pin.IPinHolderProvider;
+import com.kanomiya.mcmod.pincraft.api.pin.PinModel;
 import com.kanomiya.mcmod.pincraft.block.BlockPin;
 import com.kanomiya.mcmod.pincraft.client.render.TESRPin;
 import com.kanomiya.mcmod.pincraft.item.ItemThread;
-import com.kanomiya.mcmod.pincraft.pin.Pin;
 import com.kanomiya.mcmod.pincraft.pin.PinCapabilityProvider;
 import com.kanomiya.mcmod.pincraft.pin.PinHolder;
 import com.kanomiya.mcmod.pincraft.tile.TileEntityPin;
@@ -135,7 +135,7 @@ public class PinCraft
 
         if (entity instanceof EntityPlayer)
         {
-            IPinHolder holder = new PinHolder<Entity>(entity, new Pin(Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO));
+            IPinHolder holder = new PinHolder<Entity>(entity, new PinModel(Vec3d.ZERO, Vec3d.ZERO, Vec3d.ZERO));
 
             event.addCapability(PinCraftAPI.RL_CAP_PINHOLDER, new PinCapabilityProvider(holder));
         }
@@ -152,7 +152,7 @@ public class PinCraft
         {
             IPinHolderProvider provider = (IPinHolderProvider) tile;
 
-            IPinHolder holder = new PinHolder<TileEntity>(tile, provider.createPins());
+            IPinHolder holder = new PinHolder<TileEntity>(tile, provider.createPinModels());
 
             event.addCapability(PinCraftAPI.RL_CAP_PINHOLDER, new PinCapabilityProvider(holder));
         }

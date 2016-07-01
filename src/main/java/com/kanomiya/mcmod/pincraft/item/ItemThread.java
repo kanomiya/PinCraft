@@ -6,9 +6,7 @@ import com.kanomiya.mcmod.pincraft.PinCraft;
 import com.kanomiya.mcmod.pincraft.api.PinCraftAPI;
 import com.kanomiya.mcmod.pincraft.api.pin.IPin;
 import com.kanomiya.mcmod.pincraft.api.pin.IPinHolder;
-import com.kanomiya.mcmod.pincraft.api.pin.IPinReference;
 import com.kanomiya.mcmod.pincraft.api.pin.IThreadLine;
-import com.kanomiya.mcmod.pincraft.api.pin.PinReference;
 import com.kanomiya.mcmod.pincraft.api.pin.ThreadLine;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,15 +46,13 @@ public class ItemThread extends Item
             int index = holder.getPinIndexAt(new Vec3d(hitX, hitY, hitZ));
             if (0 <= index)
             {
-                IPinReference pinRef = new PinReference(holder, index);
-                IPin pin = pinRef.getPin();
+                IPin pin = holder.getPinAt(index);
                 IThreadLine thread = pin.getThread();
 
                 IPinHolder playerHolder = playerIn.getCapability(PinCraftAPI.CAP_PINHOLDER, null);
                 if (playerHolder == null) return EnumActionResult.FAIL;
 
-                IPinReference playerPinRef = new PinReference(playerHolder, 0);
-                IPin playerPin = playerPinRef.getPin();
+                IPin playerPin = playerHolder.getPinAt(0);
 
                 if (playerPin == null) return EnumActionResult.FAIL;
 
@@ -64,7 +60,7 @@ public class ItemThread extends Item
                 {
                     if (playerPin.getThread() == null)
                     {
-                        thread = new ThreadLine(pinRef, playerPinRef);
+                        thread = new ThreadLine(pin, playerPin);
 
                         pin.setThread(thread);
                         playerPin.setThread(thread);
@@ -75,7 +71,7 @@ public class ItemThread extends Item
 
                         playerPin.stripThread();
 
-                        thread.setDestination(pinRef);
+                        thread.setDestination(pin);
 
                         pin.setThread(thread);
                     }

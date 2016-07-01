@@ -5,12 +5,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Optional;
-
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -21,27 +16,14 @@ public interface IPin extends INBTSerializable<NBTTagCompound>
     void setThread(@Nullable IThreadLine thread);
     void stripThread();
 
-    Vec3d getOffsetVec();
-    Vec3d getSizeVec();
-    Vec3d getKnotOffsetVec();
+    IPinHolder getPinHolder();
+    int getPort();
 
-    default AxisAlignedBB getRelativeBox()
-    {
-        Vec3d offset = getOffsetVec();
-        Vec3d size = getSizeVec();
+    IPinModel getModel();
 
-        return new AxisAlignedBB(offset.xCoord -size.xCoord/2, offset.yCoord -size.yCoord/2, offset.zCoord -size.zCoord/2, offset.xCoord +size.xCoord/2, offset.yCoord +size.yCoord/2, offset.zCoord +size.zCoord/2).offset(0.5d, 0.5d, 0.5d);
-    }
-
-    default Vec3d getRelativeKnotVec()
-    {
-        AxisAlignedBB relBox = getRelativeBox();
-        return new Vec3d((relBox.maxX+relBox.minX)/2, (relBox.maxY+relBox.minY)/2, (relBox.maxZ+relBox.minZ)/2).add(getKnotOffsetVec());
-    }
-
-
-    @Nullable
-    Optional<ISignal> getSignal(ResourceLocation type);
+    boolean isOn();
+    void on();
+    void off();
 
 
     void setUUID(UUID uuid);
